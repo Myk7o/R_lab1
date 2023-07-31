@@ -1,0 +1,67 @@
+---
+title: "LAB1 STAT515"
+author: "Mykola Signayevskyy"
+date: "2023-02-03"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+#### a) Read in the "carseats" dataset, look at the first few rows and inspect the data types of the variables in the dataframe.
+
+```{r}
+carseats = read.csv('carseats.csv')
+head(carseats)
+str(carseats)
+```
+
+#### b) Change the variables "ShelveLoc, urban, US" into a factor variables.
+```{r}
+carseats$ShelveLoc=as.factor(carseats$ShelveLoc)
+carseats$Urban=as.factor(carseats$Urban)
+carseats$US=as.factor(carseats$US)
+str(carseats) #checking changes 
+```
+
+#### c) create a new variable called "profit" which stands for "Income - Advertising"
+```{r}
+carseats$Profit = carseats$Income - carseats$Advertising
+head(carseats$Profit) #checking result
+```
+
+#### d) Check for missing data. If you have missing data remove the corresponding rows from the dataset.
+```{r}
+table(is.na(carseats))
+carseats = na.omit(carseats)
+table(is.na(carseats)) #checking result
+```
+
+#### e) How many "Good" shelving locations are there in the dataset?
+```{r}
+length(which(carseats$ShelveLoc=='Good'))
+```
+
+#### f) How many stores are inside the USA? create a separate data frame containing all stores from USA. #name the data set as "stores_USA"
+```{r}
+length(which(carseats$US=="Yes"))
+
+stores_USA = carseats[carseats$US=='Yes',]
+head(stores_USA)
+```
+
+#### g) create another data set called "HighUrban_USSales" using 'stores_USA' data set. #where, sales are greater than 7 thousand and stores are located in Urban areas.
+```{r}
+HighUrban_USSales = subset(stores_USA, Sales > 7 & Urban == "Yes")
+head(HighUrban_USSales)
+```
+
+#### h) Remove "US" and "Urban" columns from the "HighUrban_USSales" dataset.
+```{r}
+HighUrban_USSales = subset(HighUrban_USSales, select = -c(Urban , US))
+head(HighUrban_USSales)
+```
+#### i) For one the above subset, write to a new CSV file
+```{r}
+write.csv(HighUrban_USSales, "HighUrban_USSales.csv")
+```
+
